@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WhatsApp Session Generator</title>
+</head>
+<body>
+    <h2>Scan the QR Code with WhatsApp</h2>
+    <div id="qr-box">
+        <img id="qr" src="" alt="QR Code will appear here" width="300">
+    </div>
+    <p id="status"></p>
+
+    <script>
+        const ws = new WebSocket(`ws://${location.host}`);
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.qr) {
+                document.getElementById('qr').src = data.qr;
+            } else if (data.status === 'connected') {
+                document.getElementById('status').innerText = 'Successfully Connected!';
+            } else if (data.status === 'disconnected') {
+                document.getElementById('status').innerText = 'Connection closed. Refresh to retry.';
+            }
+        };
+    </script>
+</body>
+</html>
